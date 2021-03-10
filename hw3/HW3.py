@@ -1,5 +1,6 @@
 from matplotlib import pyplot as plt
 from math import sqrt
+
 def distance(x1, y1, x2, y2):
 	"""
 	Расчет расстояния между двумя точками
@@ -11,6 +12,7 @@ def distance(x1, y1, x2, y2):
 	"""
 	dist = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 	return dist
+
 
 def read_data(path):
 	"""
@@ -110,27 +112,32 @@ def task3(database):
 		list: координаты домов [(x1,y1), (x2,y2) ... (xn,yn)]
 	"""
 
-	fin = []
+	list = []
 	b_list = []
-	square = {}
-	for house in database:
-		square[house] = 0
-		for others in database:
-			if distance(database[house][0], database[house][1], database[others][0], database[others][1]) <= 0.5:
-				square[house] += 0.7 * database[others][2] / 18
-	sort_key = sorted(square, key=square.get)
-	sort_key = sort_key[::-1]
-	for i in range(len(sort_key)):
-		home = sort_key[i]
-		for j in range(len(fin)):
-			if distance(database[home][0], database[home][1], fin[j][0], fin[j][1]) <= 1:
-				b_list.append(sort_key[i])
-		if sort_key[i] not in b_list:
-			fin.append((database[home][0], database[home][1]))
-		if len(fin) > 14:
-			break
-	return fin[:15]
 
+	def add_people(database):
+		for key in database:
+			database[key] = [database[key][0], database[key][1], database[key][2], database[key][2] * 0.7 / 18, 0]
+		return database
+
+	database = add_people(database)
+	for house in database:
+		for others in database:
+			if database[others] not in b_list:
+				if distance(database[house][0], database[house][1], database[others][0], database[others][1]) <= 0.5:
+					database[house][4] += database[others][3]
+					b_list.append(database[house])
+		# теперь в список list добавляю элементы так, чтобы первый элемент был кол-во жильцов, х, у
+		list.append([database[house][4], database[house][0], database[house][1]])
+	# по алгоритмам показали сортировку пузырьком, сейчас попробуем :D
+	for i in range(len(list) - 1):
+		for j in range(len(list) - 1 - i):
+			if list[j][0] > list[j + 1][0]:
+				list[j], list[j + 1] = list[j + 1], list[j]
+	coordinate = []
+	for i in range(15):
+		coordinate += [(list[i][1], list[i][2])]
+	return coordinate
 
 def plot(database, best_coords):
 	"""
