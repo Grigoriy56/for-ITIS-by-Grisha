@@ -2,9 +2,7 @@ import textwrap
 import datetime
 from random import random
 # для вызова потоков через Pool
-import concurrent.futures
 from multiprocessing.pool import ThreadPool
-from threading import Thread, Lock, current_thread
 from bs4 import BeautifulSoup
 import pickle
 numbers = []

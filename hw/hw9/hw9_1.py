@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 from math import sqrt
 import datetime
+from multiprocessing.pool import ThreadPool
 def distance(x1, y1, x2, y2):
 	"""
 	Расчет расстояния между двумя точками
@@ -67,17 +68,26 @@ def task1(database):
 	Returns:
 		list: координаты дома (x, y)
 	"""
-	t1 = datetime.datetime.now()
-	radius = {}
-	for house in database:
-		radius[house] = 0
-		for others in database:
-			if distance(database[house][0], database[house][1], database[others][0], database[others][1]) <= 0.5:
-				radius[house] += 1
+	pool = ThreadPool(8)
 
+	radius = {}
+	ret = []
+	def task1_1(data):
+		# for house in database:
+		# 	radius[data] = 0
+		# 	for others in database:
+		# 		if distance(database[data][0], database[data][1], database[others][0], database[others][1]) <= 0.5:
+		# 			radius[data] += 1
+		radius[data] = 0
+		for others in database:
+			if distance(database[data][0], database[data][1], database[others][0], database[others][1]) <= 0.5:
+				radius[data] += 1
+
+	t1 = datetime.datetime.now()
+	pool.map(task1_1, database)
 	sort_key = sorted(radius, key=radius.get)
 	k = sort_key[-1]
-	ret = [(database[k][0], database[k][1])]
+	ret.append((database[k][0], database[k][1]))
 	t2 = datetime.datetime.now()
 	print(t2-t1)
 	return ret
@@ -92,17 +102,20 @@ def task2(database):
 	Returns:
 		list: координаты домов [(x1,y1), (x2,y2) ... (xn,yn)]
 	"""
-	t1 = datetime.datetime.now()
+	pool = ThreadPool(8)
 	b_list = the_best(database)
 	bad = []
 	good = []
-	while len(good) < 15:
-		for i in b_list:
-			if i not in bad:
-				good.append((database[i][0:2]))
+	def task2_2(data):
+		while len(good) < 15:
+			if data not in bad:
+				good.append((database[data][0:2]))
 			for shop in database:
-				if distance(database[i][0], database[i][1], database[shop][0], database[shop][1]) <= 1:
+				if distance(database[data][0], database[data][1], database[shop][0], database[shop][1]) <= 1:
 					bad.append(shop)
+
+	t1 = datetime.datetime.now()
+	pool.map(task2_2, b_list)
 	t2 = datetime.datetime.now()
 	print(t2-t1)
 	return good[:10]
@@ -170,7 +183,7 @@ def plot(database, best_coords):
 	plt.show()
 
 def homework():
-	# path = "/home/alex/buildings"
+	path = "/home/alex/buildings"
 	path = "buildings"
 	database = read_data(path)
 
@@ -179,7 +192,7 @@ def homework():
 
 	best_task2 = task2(database)
 	plot(database, best_task2)
-
+	#
 	# best_task3 = task3(database)
 	# plot(database, best_task3)
 
