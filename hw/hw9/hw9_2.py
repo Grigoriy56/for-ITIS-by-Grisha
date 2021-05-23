@@ -1,5 +1,5 @@
 import textwrap
-import time
+import datetime
 from random import random
 # для вызова потоков через Pool
 import concurrent.futures
@@ -15,8 +15,8 @@ with open('page.html', 'r', encoding="utf8") as f:
 f = BeautifulSoup(f, 'lxml')
 
 
-def head(cont, array):
-    for i in cont.find_all('h5'):
+def head(array):
+    for i in f.find_all('h5'):
         array.append(i.text)
 
 
@@ -24,13 +24,13 @@ def number(cont, array):
     for i in cont.find_all("div", attrs={"class": "mobile-number"}):
         array.append(i.text)
 
-
-t1 = Thread(target=head, args=(f, heads))
-t2 = Thread(target=number, args=(f, numbers))
-t1.start()
-t2.start()
-t1.join()
-t2.join()
+#
+# t1 = Thread(target=head, args=(f, heads))
+# t2 = Thread(target=number, args=(f, numbers))
+# t1.start()
+# t2.start()
+# t1.join()
+# t2.join()
 
 telephones = {}
 headss = []
@@ -51,18 +51,18 @@ def find_tatar(array):
                 array[num[0]].append(tuple(num[1:]))
 
 
-def my_zip(arr, x, y):
+def my_zip(x, y):
     for i in range(len(x)):
         temp = (*x[i].split(','), y[i])
-        arr.append(temp)
+        headss.append(temp)
 
 
-t1 = Thread(target=find_tatar, args=(telephones, ))
-t2 = Thread(target=my_zip, args=(headss, heads, numbers ))
-t1.start()
-t2.start()
-t1.join()
-t2.join()
+# t1 = Thread(target=find_tatar, args=(telephones, ))
+# t2 = Thread(target=my_zip, args=(headss, heads, numbers))
+# t1.start()
+# t2.start()
+# t1.join()
+# t2.join()
 
 
 
@@ -72,6 +72,10 @@ def final_sort():
     pool = ThreadPool(10)
     global answers
     answers = []
+
+
+
+
     def my_sort(value):
         number = ''
         floor = ''
@@ -91,11 +95,40 @@ def final_sort():
                 for v in telephones[code]:
                     if int(v[0]) <= number <= int(v[1]):
                         answers.append(value)
+
+    pool.map(number, heads)
+    pool.map(head, headss)
+    pool.map(find_tatar, telephones)
+    pool.map(my_zip, heads, numbers)
     pool.map(my_sort, headss)
 
 
 # answers = final_sort()
-final_sort()
 
 
-pickle.dump(answers, open("result.txt", "wb"))
+def final_final_sort():
+    ti1 = datetime.datetime.now()
+
+    # t1 = Thread(target=head, args=(f, heads))
+    # t2 = Thread(target=number, args=(f, numbers))
+    # t1.start()
+    # t2.start()
+    # t1.join()
+    # t2.join()
+    #
+    # t1 = Thread(target=find_tatar, args=(telephones,))
+    # t2 = Thread(target=my_zip, args=(headss, heads, numbers))
+    # t1.start()
+    # t2.start()
+    # t1.join()
+    # t2.join()
+
+    final_sort()
+
+
+    ti2 = datetime.datetime.now()
+    print(ti2-ti1)
+
+
+final_final_sort()
+# pickle.dump(answers, open("result.txt", "wb"))
