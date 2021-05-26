@@ -1,5 +1,7 @@
 a = 'acbfbacffaabbccufacbbafaa'
 b = ['a', 'b', 'c']
+
+
 def long(word, alph):
     final = []
     for i in range(len(word)):
@@ -12,5 +14,6 @@ def long(word, alph):
                 st = ''
                 continue
     return max(*final, key=len)
+
 
 print(long(a, b))
