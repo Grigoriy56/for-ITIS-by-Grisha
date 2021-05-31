@@ -34,7 +34,7 @@ def domain_cloud(domains):
 	plt.show()
 
 
-def graph(connections, with_labels=False):
+def graph(connections, with_labels=True):
 	"""
 	Draw the graph based on a connections
 	Args:

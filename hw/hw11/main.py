@@ -30,7 +30,7 @@ for i in range(len(pages)):
         data.put(pages[i])
         already.append(re.findall(r"[\w*\W]*[?]|[\w*\W]*", pages[i])[0].replace('?', ''))
         domains.update(re.findall(r"[\w+\W]+ru\/|[\w+\W]+\net\/|[\w+\W]+com\/|[\w+\W]+co\/|[\w+\W]+net\/|[\w+\W]+world\/|[\w+\W]+jp\/", pages[i]))
-    if data.qsize() == 10:
+    if data.qsize() == 1:
         break
 # print(already)
 # print(domains)
