@@ -3,9 +3,10 @@ import pickle
 
 with open('surnames.pickle', 'rb') as file:
     file = pickle.load(file)
-    file = ' '.join(file)
 
-
-file = re.findall(r'[АЁЯЮЕОУЭЫИ].*[^аоуюёяеыэ]$', file)
-
-print(2)
+sur_names = []
+for e in file:
+    j = re.findall(r'[АОУЫЭИЁУЮ][а-я]*-?[а-яА-Я]*[^аоуэыиюеёАОУЫЭИЁУЮьъЬЪ]\b', e)
+    if e == ''.join(j):
+        sur_names.append(e)
+pдrint(3)ж
