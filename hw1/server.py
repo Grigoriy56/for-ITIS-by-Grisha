@@ -8,6 +8,7 @@ from MySocket import MySocket
 
 class Server:
 	connectioins = [MySocket(f'socket{i}') for i in range(10)]
+
 	def __init__(self):
 		self.http_protocol = {
 			'content-type': None,
