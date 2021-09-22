@@ -1,19 +1,35 @@
 import socket
-
+import sys
 # prepare
+SIZE_OF_PART = 10
 sock = socket.socket()
-sock.connect(('localhost', 8080))
+# port = int(sys.argv[1])
+sock.connect(('localhost', 8083))
 
 
-while True:
-    # connection <-> data
-    msg = input()
+def recieve(connection):
+	answer = []
+	while True:  # collect the full packet
+		part_of_data = connection.recv(SIZE_OF_PART)
+		answer.append(part_of_data)
+		if len(part_of_data) < SIZE_OF_PART:
+			break
+	return ''.join(part.decode('UTF-8') for part in answer)
 
-    if msg == "quit":
-        sock.close()
-        break
-    sock.send(msg.encode('UTF-8')) # ->
-    data = sock.recv(1024) # <-
 
+with sock:
+	while True:
+		msg = input('write a msg: ')
+		if msg == 'file()':
+			sock.send(msg.encode('UTF-8'))
+			answer = recieve(sock)
 
-    # print(data)
+			name = input(f'{answer}')
+			with open(name, 'rb') as file:
+				file = file.read()
+				sock.send(file)
+		sock.send(msg.encode('UTF-8'))
+		answer = recieve(sock)
+		print("get from server: ", answer)
+		if 'quit()' in msg:
+			break
