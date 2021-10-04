@@ -29,26 +29,19 @@ def hello_word(request):
 
             imt = weight / ((height / 100) ** 2)
             imt = round(imt, 2)
-            text = 'Ты не вычеслим'
+            text = 'Unreal'
             if imt <= 16.0:
-                text = 'Выраженный дефицит массы тела'
+                text = 'The smallest weight'
             elif 16.0 < imt <= 18.5:
-                text = 'Недостаточная масса тела (дефицит)'
+                text = 'Small weight'
             elif 18.5 < imt <= 25:
-                text = 'Норма'
+                text = 'Norm'
             elif imt > 25:
-                text = 'Чел пора наверное в зал пойти. Как думаешь?'
-            # answer = f'''
-            # Вас зовут {name},
-            # Ваш возраст {age},
-            # Ваш рост {height},
-            # Ваш вес {weight},
-            # Ваш вердикт {text}
-            # Ваш ИМТ {imt}
-            # '''
+                text = 'You are fat pig'
 
-            answer = [f'', f'Возраст {age}', f'Рост {height}', f'Вес {weight}',
-                      f'ИМТ {imt}', f'Ваш вердикт: "{text}"']
+
+            answer = [f'', f'Age {age}', f'Height {height}', f'Weight {weight}',
+                      f'BMI {imt}', f'The answer: "{text}"']
 
             context['answer'] = answer
         else:
