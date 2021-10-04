@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>First</title>
+</head>
+<body>
+<a href="{% url 'acc' %}">my account</a> <br>
+    <form method="post">
+        {% csrf_token %}
+        {{forms.as_p}}
+
+
+<!--        <input type="text" placeholder="Твой вес?" class="form-control"><br>-->
+<!--        <input type="text" placeholder="Твой рост?" class="form-control"><br>-->
+<!--        <input type="text" placeholder="Твой возраст?" class="form-control"><br>-->
+        <button class="btn btn-seccess" type="submit"> Send on webSarver</button>
+    </form>
+
+    <a>Your result: </a>
+    {% if answer %}
+        {{age}}
+        {% for book in answer %}
+      <li>
+        <a>{{ book }}</a>
+      </li>
+        {% endfor %}
+{#        <p >{{ answer }}</p>#}
+    {% endif %}
+    <br>
+    <br>
+
+
+
+</body>
+</html>
